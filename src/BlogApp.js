@@ -1,5 +1,6 @@
 import React from "react";
 import posts from "./data/posts";
+import { Link } from "react-router-dom";
 
 export default function BlogApp() {
   const formatDate = (dateString) => {
@@ -15,13 +16,15 @@ export default function BlogApp() {
       {/* ヘッダー */}
       <header className="bg-gray-600 text-white py-10 px-5">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Blog</h1>
-          <button
-            onClick={() => console.log("お問い合わせページに移動")}
+          <Link to="/" className="text-2xl font-bold text-white no-underline">
+            Blog
+          </Link>
+          <Link
+            to="/contact"
             className="text-white text-xl hover:text-gray-300 transition-colors duration-200 no-underline bg-transparent border-none cursor-pointer"
           >
             お問い合わせ
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -29,7 +32,8 @@ export default function BlogApp() {
       <main className="max-w-6xl mx-auto py-10 px-10">
         <div className="flex flex-col gap-5">
           {posts.map((post) => (
-            <div
+            <Link
+              to={`/post/${post.id}`}
               key={post.id}
               className="w-3/5 mx-auto bg-white border border-gray-300 p-5"
             >
@@ -53,7 +57,7 @@ export default function BlogApp() {
               {/* タイトルと内容 */}
               <h2 className="text-xl font-bold mb-5">{post.title}</h2>
               <p className="text-gray-800 leading-relaxed">{post.content}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </main>
