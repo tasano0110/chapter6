@@ -1,33 +1,11 @@
 import React from "react";
 import posts from "./data/posts";
 import { Link } from "react-router-dom";
+import formatDate from "./utilities/formatDate";
 
 export default function BlogApp() {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}/${month}/${day}`;
-  };
-
   return (
     <>
-      {/* ヘッダー */}
-      <header className="bg-gray-600 text-white py-10 px-5">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-white no-underline">
-            Blog
-          </Link>
-          <Link
-            to="/contact"
-            className="text-white text-xl hover:text-gray-300 transition-colors duration-200 no-underline bg-transparent border-none cursor-pointer"
-          >
-            お問い合わせ
-          </Link>
-        </div>
-      </header>
-
       {/* メインコンテンツ */}
       <main className="max-w-6xl mx-auto py-10 px-10">
         <div className="flex flex-col gap-5">

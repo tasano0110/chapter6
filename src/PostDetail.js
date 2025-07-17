@@ -1,19 +1,11 @@
 import React from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import posts from "./data/posts";
+import formatDate from "./utilities/formatDate";
 
 export default function PostDetail() {
   const { id } = useParams();
   const post = posts.find((post) => post.id === parseInt(id));
-
-  // 日付フォーマット関数
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}/${month}/${day}`;
-  };
 
   if (!post) {
     return <div>記事が見つかりませんでした。</div>;
@@ -21,21 +13,6 @@ export default function PostDetail() {
 
   return (
     <>
-      {/* ヘッダー（BlogAppと同じ） */}
-      <header className="bg-gray-600 text-white py-10 px-5">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-white no-underline">
-            Blog
-          </Link>
-          <Link
-            to="/contact"
-            className="text-white text-xl hover:text-gray-300 transition-colors duration-200 no-underline"
-          >
-            お問い合わせ
-          </Link>
-        </div>
-      </header>
-
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto py-10 px-10">
         <article className="bg-white border border-gray-300 p-8">

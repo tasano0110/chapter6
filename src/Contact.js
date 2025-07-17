@@ -4,26 +4,11 @@ import { Link } from "react-router-dom";
 export default function Contact() {
   return (
     <>
-      {/* ヘッダー */}
-      <header className="bg-gray-600 text-white py-10 px-5">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-white no-underline">
-            Blog
-          </Link>
-          <Link
-            to="/contact"
-            className="text-white text-xl hover:text-gray-300 transition-colors duration-200 no-underline"
-          >
-            お問い合わせ
-          </Link>
-        </div>
-      </header>
-
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto py-16 px-10">
         <div className="bg-white">
           <h1 className="text-3xl font-bold mb-12 text-gray-900 text-center">
-            問合せフォーム
+            問い合わせフォーム
           </h1>
 
           {/* お問い合わせフォーム */}
