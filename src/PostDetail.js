@@ -4,7 +4,7 @@ import formatDate from "./utilities/formatDate";
 
 export default function PostDetail() {
   const { id } = useParams();
-  const [post, setPost] = useState([id]);
+  const [post, setPost] = useState(null);
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -12,10 +12,12 @@ export default function PostDetail() {
         `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`
       );
       const data = await res.json();
-      setPost(data);
+      setPost(data.post);
     };
     fetchPostDetail();
   }, [id]);
+
+  if (!post) return <div>読み込み中...</div>;
 
   return (
     <>

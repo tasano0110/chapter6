@@ -11,7 +11,8 @@ export default function BlogApp() {
         "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts"
       );
       const data = await res.json();
-      setPosts(data);
+      console.log(data);
+      setPosts(data.posts);
     };
     fetchPosts();
   }, []);
