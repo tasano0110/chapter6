@@ -1,15 +1,23 @@
-import React from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
-import posts from "./data/posts";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import formatDate from "./utilities/formatDate";
 
 export default function PostDetail() {
   const { id } = useParams();
-  const post = posts.find((post) => post.id === parseInt(id));
+  const [post, setPost] = useState(null);
 
-  if (!post) {
-    return <div>記事が見つかりませんでした。</div>;
-  }
+  useEffect(() => {
+    const fetchPostDetail = async () => {
+      const res = await fetch(
+        `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`
+      );
+      const data = await res.json();
+      setPost(data.post);
+    };
+    fetchPostDetail();
+  }, [id]);
+
+  if (!post) return <div>読み込み中...</div>;
 
   return (
     <>
