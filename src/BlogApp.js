@@ -1,9 +1,21 @@
-import React from "react";
-import posts from "./data/posts";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import formatDate from "./utilities/formatDate";
 
 export default function BlogApp() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await fetch(
+        "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts"
+      );
+      const data = await res.json();
+      setPosts(data);
+    };
+    fetchPosts();
+  }, []);
+
   return (
     <>
       {/* メインコンテンツ */}
