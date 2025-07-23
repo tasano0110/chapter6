@@ -1,7 +1,100 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    //エラーメッセージをクリア
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
+  };
+
+  //バリデーション関数
+  const validateForm = () => {
+    const newErrors = {
+      name: "",
+      email: "",
+      message: "",
+    };
+
+    //nameのバリデーション
+    if (!formData.name.trim()) {
+      newErrors.name = "お名前は必須です。";
+    } else if (formData.name.length > 30) {
+      newErrors.name = "お名前は30文字以内で入力してください。";
+    }
+
+    //emailのバリデーション
+    if (!formData.email.trim()) {
+      newErrors.email = "メールアドレスは必須です。";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = "正しいメールアドレスの形式で入力してください。";
+      }
+    }
+
+    //messageのバリデーション
+    if (!formData.message.trim()) {
+      newErrors.message = "本文は必須です。";
+    } else if (formData.message.length > 500) {
+      newErrors.message = "500文字以内で入力してください。";
+    }
+
+    setErrors(newErrors);
+    return !newErrors.name && !newErrors.email && !newErrors.message;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    //バリデーションチェック
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    const response = await fetch(
+      "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/contacts",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      alert("送信しました");
+      setFormData({ name: "", email: "", message: "" });
+      setErrors({ name: "", email: "", message: "" });
+    }
+    setIsLoading(false);
+  };
+
+  //クリアボタンによるフォームクリア処理
+  const handleClear = () => {
+    setFormData({ name: "", email: "", message: "" });
+    setErrors({ name: "", email: "", message: "" });
+  };
+
   return (
     <>
       {/* メインコンテンツ */}
@@ -12,16 +105,25 @@ export default function Contact() {
           </h1>
 
           {/* お問い合わせフォーム */}
-          <form className="space-y-8">
+          <form className="space-y-8" onSubmit={handleSubmit}>
             {/* お名前 */}
             <div className="flex items-center gap-8">
               <label className="block text-lg font-medium text-gray-900 w-24 text-left">
                 お名前
               </label>
-              <input
-                type="text"
-                className="flex-1 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-              />
+              <div className="flex-1 w-full">
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                  className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm">{errors.name}</p>
+                )}
+              </div>
             </div>
 
             {/* メールアドレス */}
@@ -29,10 +131,19 @@ export default function Contact() {
               <label className="block text-lg font-medium text-gray-900 w-24 text-left">
                 メールアドレス
               </label>
-              <input
-                type="email"
-                className="flex-1 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-              />
+              <div className="flex-1 w-full">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                  className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                )}
+              </div>
             </div>
 
             {/* 本文 */}
@@ -40,22 +151,33 @@ export default function Contact() {
               <label className="block text-lg font-medium text-gray-900 w-24 text-left pt-4">
                 本文
               </label>
-              <textarea
-                rows="8"
-                className="flex-1 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg resize-none"
-              ></textarea>
+              <div className="flex-1 w-full">
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                  rows="8"
+                  className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg resize-none"
+                ></textarea>
+                {errors.message && (
+                  <p className="text-red-500 text-sm">{errors.message}</p>
+                )}
+              </div>
             </div>
 
             {/* ボタン */}
             <div className="flex justify-center gap-4 pt-8">
               <button
                 type="submit"
+                disabled={isLoading}
                 className="bg-gray-800 text-white px-8 py-3 rounded-md hover:bg-gray-700 transition-colors duration-200 text-lg font-medium"
               >
                 送信
               </button>
               <button
                 type="button"
+                onClick={handleClear}
                 className="bg-gray-300 text-gray-800 px-8 py-3 rounded-md hover:bg-gray-400 transition-colors duration-200 text-lg font-medium"
               >
                 クリア
