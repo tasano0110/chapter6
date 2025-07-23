@@ -83,8 +83,7 @@ export default function Contact() {
 
     if (response.ok) {
       alert("送信しました");
-      setFormData({ name: "", email: "", message: "" });
-      setErrors({ name: "", email: "", message: "" });
+      handleClear();
     }
     setIsLoading(false);
   };
